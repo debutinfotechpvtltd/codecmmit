@@ -26,5 +26,6 @@ phases:
       - "docker push 411859375163.dkr.ecr.us-east-1.amazonaws.com/nodejs:latest"
   artifacts:
     files:
-      - 'public/*'
-    discard-paths: yes    
+      - imageDetail.json
+      - appspec.yml
+      - taskdef.json
