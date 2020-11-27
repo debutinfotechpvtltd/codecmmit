@@ -1,58 +1,25 @@
-# Do not change version. This is the version of aws buildspec, not the version of your buldspec file.
-#version: 0.2
-
-#phases:
-#  install:
-#    runtime-versions:
-#      nodejs: 10  
-#    commands:
-#      - echo Installing Mocha...
-#      - npm install -g mocha
-#  pre_build:
-#    commands:
-#      - echo Installing source NPM dependencies...
-#      - npm install
-#      - npm install unit.js
-#  build:
-#    commands:
-#      - echo Build started on `date`
-#      - echo Compiling the Node.js code
-#      - mocha test.js
-#  post_build:
-#    commands:
-#      - echo Build completed on `date`
-# Include only the files required for your application to run.
-# Do not use recursively include artifacts from node_modules directory as it will include unnecessary packages 
-# used only for building and testing.
-# ExpressJS apps will need other artifact directories included (bin/*, public/*, routes/*, views/* etc).
-#artifacts:
-#  files:
-#    - app.js
-#    - index.html
-#    - package.json
-#    - node_modules/async/*
-#    - node_modules/lodash/*
-
 version: 0.2
+ 
 phases:
+  install:
+    runtime-versions:
+      docker: 18
   pre_build:
     commands:
-      - echo Installing source NPM dependencies...
-      - npm install
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - "$(aws ecr get-login --region us-east-1)"
+      #- REPOSITORY_URI=411859375163.dkr.ecr.us-east-1.amazonaws.com/nodejs
+      
+      
   build:
     commands:
       - echo Build started on `date`
-      - echo Compiling the dist folder
-      #- npm run build
+      - echo Building the Docker image...          
+      - "docker build -t nodejs ."
+      - "docker tag nodejs:latest 411859375163.dkr.ecr.us-east-1.amazonaws.com/nodejs:latest"      
   post_build:
     commands:
-      - echo Build completed on `date`
-# Include only the files required for your application to run.
-artifacts:
-  files:
-    #- index.js
-    #- dist/**/*
-    #- request-map.js
-    #- credentials.json
-    #- node_modules/**/*
-    - '**/*'
+      - "echo Build completed on `date`"
+      - "echo Pushing the Docker image..."
+      - "docker push 411859375163.dkr.ecr.us-east-1.amazonaws.com/nodejs:latest"
