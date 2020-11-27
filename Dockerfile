@@ -16,4 +16,5 @@ RUN npm install
 COPY . .
 
 EXPOSE 8080
+ADD target/order-service.jar order-service.jar 
 CMD [ "node", "server.js" ]
