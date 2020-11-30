@@ -28,6 +28,6 @@ phases:
  #artifacts:
  #  files
  #    - '**/*'
-artifacts:
-  files:
-    - taskdefinition.json
+#artifacts:
+#  files:
+#    - taskdefinition.json
